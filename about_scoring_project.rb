@@ -29,8 +29,68 @@ require File.expand_path(File.dirname(__FILE__) + '/neo')
 #
 # Your goal is to write the score method.
 
+def check_for_sets(dice)
+  0
+end
+def check_for_fives(dice)
+  number_of_5s = dice.count{|i| i == 5}
+  if number_of_5s == 3
+    return 500
+  end
+  return number_of_5s * 50
+end
+def check_for_ones(dice)
+  number_of_ones = dice.count{|i| i == 1}
+  if number_of_ones == 3
+    return 1000
+  end
+  return number_of_ones * 100
+end
+
+def get_count(search,dice)
+  return dice.count{|i| i == search}
+end
+
 def score(dice)
   # You need to write this method
+
+  score = 0
+
+  if dice.size == 0
+    return score
+  end 
+  (1..6).each do |item|
+    count = get_count item,dice
+
+    # If we found none, don't bother checking other stuff
+    if count == 0
+      next
+    end
+
+    # If it's a triple, count it, then remove those values so we don't continue to count them
+    if count >= 3
+      if item == 1
+        score += 1000
+      else
+        score += item * 100
+      end
+      count -= 3 # We've counted 3 of them already. Get rid of them.
+    end
+
+    # If we found none, don't bother checking other stuff
+    if count == 0
+      next
+    end 
+
+    # Process whatever's left.
+    if item == 5
+      score += count * 50
+    elsif item == 1
+      score += count * 100
+    end
+  end
+
+  return score
 end
 
 class AboutScoringProject < Neo::Koan
